@@ -17,8 +17,17 @@ runs:
       uses: actions/setup-go@v5
       with:
         go-version: ${{ inputs.go-version }}
+        cache: false
 
-    - name: Setup Trash
+    - name: Cache Trash Binary
+      id: cache-trash
+      uses: actions/cache@v4
+      with:
+        path: ~/go/bin/trash
+        key: ${{ runner.os }}-trash-bin-v1
+
+    - name: Install Trash
+      if: steps.cache-trash.outputs.cache-hit != 'true'
       shell: bash
       run: go install github.com/zeozeozeo/trash@latest
 
